@@ -205,3 +205,65 @@ class SnakeAndApple:
                     ),
                 )
             self.window.update()
+
+
+#### functions for doing the logical work
+            
+            
+    def update_snake(self, key):
+        # Check if it hit the wall or its own body
+        tail = self.snake[0]
+        head = self.snake[-1]
+        if tail != self.old_apple_cell:
+            self.snake.pop(0)
+        if key == "Left":
+            self.snake.append((head[0] - 1, head[1]))
+        elif key == "Right":
+            self.snake.append((head[0] + 1, head[1]))
+        elif key == "Up":
+            self.snake.append((head[0], head[1] - 1))
+        elif key == "Down":
+            self.snake.append((head[0], head[1] + 1))
+
+        head = self.snake[-1]
+        if (
+                head[0] > cols - 1
+                or head[0] < 0
+                or head[1] > rows - 1
+                or head[1] < 0
+                or len(set(self.snake)) != len(self.snake)
+        ):
+            # Hit the wall / Hit on body
+            self.crashed = True
+        elif self.apple_cell == head:
+            # Got the apple
+            self.old_apple_cell = self.apple_cell
+            self.canvas.delete(self.apple_obj)
+            self.place_apple()
+            self.display_snake()
+        else:
+            self.snake_heading = key
+            self.display_snake()
+
+    def check_if_key_valid(self, key):
+        valid_keys = ["Up", "Down", "Left", "Right"]
+        if key in valid_keys and self.forbidden_actions[self.snake_heading] != key:
+            return True
+        else:
+            return False
+
+    def mouse_input(self, event):
+        self.play_again()
+
+    def key_input(self, event):
+        if not self.crashed:
+            key_pressed = event.keysym
+            # Check if the pressed key is a valid key
+            if self.check_if_key_valid(key_pressed):
+                # print(key_pressed)
+                self.begin = True
+                self.last_key = key_pressed
+
+
+game_instance = SnakeAndApple()
+game_instance.mainloop()
