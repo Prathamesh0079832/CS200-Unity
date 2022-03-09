@@ -41,4 +41,36 @@ class Dots_and_Boxes():
 
     def mainloop(self):
         self.window.mainloop()
+    
+    def is_grid_occupied(self, logical_position, type):
+        r = logical_position[0]
+        c = logical_position[1]
+        occupied = True
+
+        if type == 'row' and self.row_status[c][r] == 0:
+            occupied = False
+        if type == 'col' and self.col_status[c][r] == 0:
+            occupied = False
+
+        return occupied
+
+    def convert_grid_to_logical_position(self, grid_position):
+        grid_position = np.array(grid_position)
+        position = (grid_position-distance_between_dots/4)//(distance_between_dots/2)
+
+        type = False
+        logical_position = []
+        if position[1] % 2 == 0 and (position[0] - 1) % 2 == 0:
+            r = int((position[0]-1)//2)
+            c = int(position[1]//2)
+            logical_position = [r, c]
+            type = 'row'
+            # self.row_status[c][r]=1
+        elif position[0] % 2 == 0 and (position[1] - 1) % 2 == 0:
+            c = int((position[1] - 1) // 2)
+            r = int(position[0] // 2)
+            logical_position = [r, c]
+            type = 'col'
+
+        return logical_position, type
 
