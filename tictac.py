@@ -7,7 +7,10 @@ import numpy as np
 
 size_of_board = 600
 symbol_size = (size_of_board / 3 - size_of_board / 8) / 2
-
+symbol_thickness = 50
+symbol_X_color = '#EE4035'
+symbol_O_color = '#0492CF'
+Green_color = '#7BC043'
 
 
 #create-class#
@@ -24,6 +27,24 @@ class Tic_Tac_Toe():
            
            self.window.bind('<Button-1>', self.click) # A form of input taken from user as click
           
+           self.initialize_board()
+           self.player_X_turns = True
+           self.board_status = np.zeros(shape=(3, 3))
+ 
+           self.player_X_starts = True
+           self.reset_board = False
+           self.gameover = False
+           self.tie = False
+           self.X_wins = False
+           self.O_wins = False
+
+           self.X_score = 0
+           self.O_score = 0
+           self.tie_score = 0
+
+
+
+
        def mainloop(self):
            self.window.mainloop() 
      
@@ -143,31 +164,56 @@ class Tic_Tac_Toe():
 
 
        def is_gameover(self):
-        # Either someone wins or all grid occupied
-        self.X_wins = self.is_winner('X')
-        if not self.X_wins:
-            self.O_wins = self.is_winner('O')
+         # Either someone wins or all grid occupied
+         self.X_wins = self.is_winner('X')
+         if not self.X_wins:
+             self.O_wins = self.is_winner('O')
 
-        if not self.O_wins:
-            self.tie = self.is_tie()
+         if not self.O_wins:
+             self.tie = self.is_tie()
 
-        gameover = self.X_wins or self.O_wins or self.tie
+         gameover = self.X_wins or self.O_wins or self.tie
 
-        if self.X_wins:
-            print('X wins')
-        if self.O_wins:
-            print('O wins')
-        if self.tie:
-            print('Its a tie')
+         if self.X_wins:
+             print('X wins')
+         if self.O_wins:
+             print('O wins')
+         if self.tie:
+             print('Its a tie')
 
-        return gameover
-
-
+         return gameover
 
 
 
+       def click(self, event):
+         grid_position = [event.x, event.y]
+         logical_position = self.convert_grid_to_logical_position(grid_position)
+
+         if not self.reset_board:
+             if self.player_X_turns:
+                 if not self.is_grid_occupied(logical_position):
+                     self.draw_X(logical_position)
+                     self.board_status[logical_position[0]][logical_position[1]] = -1
+                     self.player_X_turns = not self.player_X_turns
+             else:
+                 if not self.is_grid_occupied(logical_position):
+                     self.draw_O(logical_position)
+                     self.board_status[logical_position[0]][logical_position[1]] = 1
+                     self.player_X_turns = not self.player_X_turns
+
+             # Check if game is concluded
+             if self.is_gameover():
+                 self.display_gameover()
+                 # print('Done')
+         else: 
+             self.canvas.delete("all")
+             self.play_again()
+             self.reset_board = False
 
 
+
+game_instance = Tic_Tac_Toe()
+game_instance.mainloop()
 
 
          
