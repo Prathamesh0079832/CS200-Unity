@@ -73,4 +73,41 @@ class Dots_and_Boxes():
             type = 'col'
 
         return logical_position, type
+    
+    def mark_box(self):
+        boxes = np.argwhere(self.board_status == -4)
+        for box in boxes:
+            if list(box) not in self.already_marked_boxes and list(box) !=[]:
+                self.already_marked_boxes.append(list(box))
+                color = player1_color_light
+                self.shade_box(box, color)
 
+        boxes = np.argwhere(self.board_status == 4)
+        for box in boxes:
+            if list(box) not in self.already_marked_boxes and list(box) !=[]:
+                self.already_marked_boxes.append(list(box))
+                color = player2_color_light
+                self.shade_box(box, color)
+
+    def update_board(self, type, logical_position):
+        r = logical_position[0]
+        c = logical_position[1]
+        val = 1
+        if self.player1_turn:
+            val =- 1
+
+        if c < (number_of_dots-1) and r < (number_of_dots-1):
+            self.board_status[c][r] += val
+
+        if type == 'row':
+            self.row_status[c][r] = 1
+            if c >= 1:
+                self.board_status[c-1][r] += val
+
+        elif type == 'col':
+            self.col_status[c][r] = 1
+            if r >= 1:
+                self.board_status[c][r-1] += val
+
+    def is_gameover(self):
+        return (self.row_status == 1).all() and (self.col_status == 1).all()
