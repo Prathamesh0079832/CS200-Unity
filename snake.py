@@ -2,6 +2,7 @@ from tkinter import *
 import numpy as np
 from PIL import ImageTk,Image
 import time
+import random
 
 
 size_of_board = 600
@@ -94,9 +95,9 @@ class SnakeAndApple:
                     self.begin = False
                     self.display_gameover()
                     
-#### Added play_again and mainloop for repeating the game  
+#### defined play_again and mainloop for repeating the game  
 
-#### Adding The modules required to draw required game based object on canvas    
+#### defining The modules required to draw required game based object on canvas    
 
     def display_gameover(self):
         score = len(self.snake)
@@ -137,3 +138,70 @@ class SnakeAndApple:
             fill="gray",
             text=score_text,
         )     
+        
+####  functions for placing apple and drawing snake
+
+
+    def place_apple(self):
+        # Place apple randomly anywhere except at the cells occupied by snake
+        unoccupied_cels = set(self.board) - set(self.snake)
+        self.apple_cell = random.choice(list(unoccupied_cels))
+        row_h = int(size_of_board / rows)
+        col_w = int(size_of_board / cols)
+        x1 = self.apple_cell[0] * row_h
+        y1 = self.apple_cell[1] * col_w
+        x2 = x1 + row_h
+        y2 = y1 + col_w
+        self.apple_obj = self.canvas.create_rectangle(
+            x1, y1, x2, y2, fill=RED_COLOR_LIGHT, outline=BLUE_COLOR,
+        )
+
+    def display_snake(self, mode=""):
+        # Remove tail from display if it exists
+        if self.snake_objects != []:
+            self.canvas.delete(self.snake_objects.pop(0))
+        if mode == "complete":
+            for i, cell in enumerate(self.snake):
+                # print(cell)
+                row_h = int(size_of_board / rows)
+                col_w = int(size_of_board / cols)
+                x1 = cell[0] * row_h
+                y1 = cell[1] * col_w
+                x2 = x1 + row_h
+                y2 = y1 + col_w
+                self.snake_objects.append(
+                    self.canvas.create_rectangle(
+                        x1, y1, x2, y2, fill=BLUE_COLOR, outline=BLUE_COLOR,
+                    )
+                )
+        else:
+            # only update head
+            cell = self.snake[-1]
+            row_h = int(size_of_board / rows)
+            col_w = int(size_of_board / cols)
+            x1 = cell[0] * row_h
+            y1 = cell[1] * col_w
+            x2 = x1 + row_h
+            y2 = y1 + col_w
+            self.snake_objects.append(
+                self.canvas.create_rectangle(
+                    x1, y1, x2, y2, fill=BLUE_COLOR, outline=RED_COLOR,
+                )
+            )
+            if self.snake[0] == self.old_apple_cell:
+                self.snake.insert(0, self.old_apple_cell)
+                self.old_apple_cell = []
+                tail = self.snake[0]
+                row_h = int(size_of_board / rows)
+                col_w = int(size_of_board / cols)
+                x1 = tail[0] * row_h
+                y1 = tail[1] * col_w
+                x2 = x1 + row_h
+                y2 = y1 + col_w
+                self.snake_objects.insert(
+                    0,
+                    self.canvas.create_rectangle(
+                        x1, y1, x2, y2, fill=BLUE_COLOR, outline=RED_COLOR
+                    ),
+                )
+            self.window.update()
