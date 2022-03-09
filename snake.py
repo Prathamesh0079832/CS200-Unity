@@ -94,4 +94,46 @@ class SnakeAndApple:
                     self.begin = False
                     self.display_gameover()
                     
-#### Added play_again and mainloop for repeating the game           
+#### Added play_again and mainloop for repeating the game  
+
+#### Adding The modules required to draw required game based object on canvas    
+
+    def display_gameover(self):
+        score = len(self.snake)
+        self.canvas.delete("all")
+        score_text = "Scores \n"
+
+        # put gif image on canvas
+        # pic's upper left corner (NW) on the canvas is at x=50 y=10
+
+        self.canvas.create_text(
+            size_of_board / 2,
+            3 * size_of_board / 8,
+            font="cmr 40 bold",
+            fill=Green_color,
+            text=score_text,
+        )
+        score_text = str(score)
+        self.canvas.create_text(
+            size_of_board / 2,
+            1 * size_of_board / 2,
+            font="cmr 50 bold",
+            fill=BLUE_COLOR,
+            text=score_text,
+        )
+        time_spent = str(np.round(time.time() - self.begin_time, 1)) + 'sec'
+        self.canvas.create_text(
+            size_of_board / 2,
+            3 * size_of_board / 4,
+            font="cmr 20 bold",
+            fill=BLUE_COLOR,
+            text=time_spent,
+        )
+        score_text = "Click to play again \n"
+        self.canvas.create_text(
+            size_of_board / 2,
+            15 * size_of_board / 16,
+            font="cmr 20 bold",
+            fill="gray",
+            text=score_text,
+        )     
