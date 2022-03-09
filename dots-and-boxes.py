@@ -146,7 +146,7 @@ class Dots_and_Boxes():
             color = 'gray'
 
         self.canvas.delete("all")
-        self.canvas.create_text(size_of_board / 2, size_of_board / 3, font="cmr 60 bold", fill=color, text=text)
+        self.canvas.create_text(size_of_board / 2, size_of_board / 3, font="cmr 40 bold", fill=color, text=text)
 
         score_text = 'Scores \n'
         self.canvas.create_text(size_of_board / 2, 5 * size_of_board / 8, font="cmr 40 bold", fill=Green_color,
@@ -193,7 +193,7 @@ class Dots_and_Boxes():
         self.canvas.delete(self.turntext_handle)
         self.turntext_handle = self.canvas.create_text(size_of_board - 5*len(text),
                                                        size_of_board-distance_between_dots/8,
-                                                       font="cmr 15 bold", text=text, fill=color)
+                                                       font="cmr 12 bold", text=text, fill=color)
 
 
     def shade_box(self, box, color):
@@ -202,20 +202,6 @@ class Dots_and_Boxes():
         end_x = start_x + distance_between_dots - edge_width
         end_y = start_y + distance_between_dots - edge_width
         self.canvas.create_rectangle(start_x, start_y, end_x, end_y, fill=color, outline='')
-
-    def display_turn_text(self):
-        text = 'Next turn: '
-        if self.player1_turn:
-            text += 'Player1'
-            color = player1_color
-        else:
-            text += 'Player2'
-            color = player2_color
-
-        self.canvas.delete(self.turntext_handle)
-        self.turntext_handle = self.canvas.create_text(size_of_board - 5*len(text),
-                                                       size_of_board-distance_between_dots/8,
-                                                       font="cmr 15 bold",text=text, fill=color)
 
     def click(self, event):
         if not self.reset_board:
