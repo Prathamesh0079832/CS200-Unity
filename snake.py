@@ -1,6 +1,7 @@
 from tkinter import *
 import numpy as np
 from PIL import ImageTk,Image
+import time
 
 
 size_of_board = 600
@@ -31,7 +32,7 @@ class SnakeAndApple:
         self.play_again()
         self.begin = False
 
-# Initialized Functions
+#### Initialized Functions
 
 
     def initialize_board(self):
@@ -54,7 +55,7 @@ class SnakeAndApple:
             )
             
             
-# # Initialized Board
+#### Initialized Board
 
 
     def initialize_snake(self):
@@ -72,4 +73,25 @@ class SnakeAndApple:
             self.snake.append((i, 0))
             
             
-# Initialized snake
+#### Initialized snake
+
+
+    def play_again(self):
+        self.canvas.delete("all")
+        self.initialize_board()
+        self.initialize_snake()
+        self.place_apple()
+        self.display_snake(mode="complete")
+        self.begin_time = time.time()
+
+    def mainloop(self):
+        while True:
+            self.window.update()
+            if self.begin:
+                if not self.crashed:
+                    self.window.after(DELAY, self.update_snake(self.last_key))
+                else:
+                    self.begin = False
+                    self.display_gameover()
+                    
+#### Added play_again and mainloop for repeating the game           
